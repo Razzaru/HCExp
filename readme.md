@@ -11,7 +11,7 @@ You can use it for your home payments, or if you want to control every dollar(ro
 ## Quick Start ##
 
 1. First clone the repository
-2. composer require (probably, you don't ever need to do it, because laravel is just a simple server implementation, and this is totally client-side application made on AngularJS)
+2. npm install
 3. ???
 4. PROFIT!
 
