@@ -1,0 +1,129 @@
+<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <button class="btn btn-default" ng-class="{'btn-primary': cashier.showFirst==true}" style="width: 49.1%"
+                    ng-click="cashier.showFirst=true; cashier.isShowedGains=false">Добавить трату
+            </button>
+            <button class="btn btn-default" ng-class="{'btn-primary': cashier.showFirst==false}" style="width: 49.1%"
+                    ng-click="cashier.showFirst=false; cashier.isShowed=false">Добавить доход
+            </button>
+        </div>
+        <div class="panel-body" ng-show="cashier.showFirst==true">
+            <div class="input-group">
+                <span class="input-group-addon">Название</span>
+                <input type="text" class="form-control" placeholder="Что купили?" aria-describedby="basic-addon1"
+                       ng-model="cashier.name">
+            </div>
+            <br>
+            <div class="input-group">
+                <span class="input-group-addon">Цена</span>
+                <input type="text" class="form-control" placeholder="Сколько стоило?" aria-describedby="basic-addon1"
+                       ng-model="cashier.price">
+            </div>
+            <br>
+            <select class="form-control" style="width: 100%" ng-model="cashier.category">\
+                <option value="" selected>--Выберите категорию--</option>
+                <option ng-repeat="category in cashier.categories" value="{{ category.name }}">{{ category.name }}
+                </option>
+            </select>
+            <br>
+            <button class="btn btn-default" style="width: 100%" ng-click="cashier.addItem(); count()">Добавить!</button>
+            <button class="btn btn-default" style="width: 49.1%; margin-top: 10px" ng-click="cashier.isShowed=true">
+                Показать
+            </button>
+            <button class="btn btn-default" style="width: 49.1%; margin-top: 10px" ng-click="cashier.isShowed=false">
+                Спрятать
+            </button>
+        </div>
+
+        <div class="panel-body" ng-show="cashier.showFirst==false">
+            <div class="input-group">
+                <span class="input-group-addon">Название</span>
+                <input type="text" class="form-control" placeholder="Откуда деньги?" aria-describedby="basic-addon1"
+                       ng-model="cashier.addName">
+            </div>
+            <br>
+            <div class="input-group">
+                <span class="input-group-addon">Количество</span>
+                <input type="text" class="form-control" placeholder="Сколько получили?" aria-describedby="basic-addon1"
+                       ng-model="cashier.addMoney">
+            </div>
+            <br>
+            <button class="btn btn-default" style="width: 100%" ng-click="cashier.addMonthMoney(); cashier.addGain(); cashier.isShowedGains=true">
+                Добавить!
+            </button>
+            <button class="btn btn-default" style="width: 49.1%; margin-top: 10px"
+                    ng-click="cashier.isShowedGains=true">
+                Показать
+            </button>
+            <button class="btn btn-default" style="width: 49.1%; margin-top: 10px"
+                    ng-click="cashier.isShowedGains=false">
+                Спрятать
+            </button>
+        </div>
+    </div>
+    <div class="panel-body" ng-show="cashier.isShowed">
+        <ul class="list-group">
+            <spending-item ng-repeat="item in cashier.spendingItems track by $index"></spending-item>
+        </ul>
+    </div>
+<div class="panel-body" ng-show="cashier.isShowedGains">
+    <ul class="list-group">
+        <spending-item ng-repeat="item in cashier.gains track by $index"></spending-item>
+    </ul>
+</div>
+</div>
+<div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4>К {{ cashier.now.toLocaleDateString() }} потрачено {{ cashier.total }} рублей
+                <small class="pull-right hidden-xs hidden-sm">Сумма на месяц: {{ cashier.monthMoney }}</small>
+            </h4>
+        </div>
+        <div class="panel-body">
+            <div class="progress">
+                <div class="progress-bar progress-bar-danger" role="progressbar"
+                     aria-valuenow="{{ cashier.percentage() }}"
+                     aria-valuemin="0" aria-valuemax="100" style="width: {{ cashier.percentage() }}%">
+                    {{ cashier.totalPrice() }}
+                </div>
+                <p class="text-center">{{ cashier.monthMoney - cashier.totalPrice() }}</p>
+            </div>
+            <div class="page-header">
+                <button class="btn btn-default" style="width: 49%" ng-click="cashier.fullStatistics=true">Подробнее
+                </button>
+                <button class="btn btn-default" style="width: 49%" ng-click="cashier.fullStatistics=false">Скрыть
+                </button>
+            </div>
+            <ul class="list-group" ng-show="cashier.fullStatistics">
+                <li class="list-group-item">Еда: {{ cashier.countCat('Еда') }}</li>
+                <li class="list-group-item">Проезды: {{ cashier.countCat('Проезды') }}</li>
+                <li class="list-group-item">Алкоголь: {{ cashier.countCat('Алкоголь') }}</li>
+                <li class="list-group-item">Электроника: {{ cashier.countCat('Электроника') }}</li>
+                <li class="list-group-item">Мебель: {{ cashier.countCat('Мебель') }}</li>
+                <li class="list-group-item">Посуда: {{ cashier.countCat('Посуда') }}</li>
+                <li class="list-group-item">Другое: {{ cashier.countCat('Другое') }}</li>
+            </ul>
+            <canvas id="line" class="chart chart-line" chart-data="cashier.data"
+                    chart-labels="cashier.labels" chart-series="cashier.series" chart-options="cashier.options"
+                    chart-dataset-override="cashier.datasetOverride">
+            </canvas>
+            <hr>
+            <div class="days hidden-xs hidden-sm">
+                <ul class="nav nav-tabs">
+                    <li style="width: 41px"><a href="" class="fa fa-times-circle" ng-show="!cashier.offset"></a></li>
+                    <li style="width: 41px"><a href="#" ng-click="cashier.setNewActiveDates(-cashier.dates.length)"
+                                               class="fa fa-arrow-left" ng-show="cashier.offset>0"></a></li>
+                    <li ng-class="{'active': cashier.date.getDate()==date.getDate()}" ng-repeat="date in cashier.dates">
+                        <a href="#" ng-click="cashier.date=date">{{
+                            date.toLocaleDateString() }}</a></li>
+                    <li style="width: 41px"><a href="#" ng-click="cashier.setNewActiveDates(cashier.dates.length)"
+                                               class="fa fa-arrow-right"></a></li>
+                </ul>
+
+                <date-sum></date-sum>
+
+            </div>
+        </div>
+    </div>
+</div>

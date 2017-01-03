@@ -1,0 +1,52 @@
+<main>
+    <nav class="navbar navbar-default">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                        aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">Home cashier</a>
+            </div>
+            <div id="navbar" class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="" ng-click="empty">Траты и статистика</a></li>
+                    <li class=""><a href="" ng-click="cashier.monthMoneyEdit=true">Обновить сумму на месяц</a></li>
+                    <li class=""><a href="" ng-click="cashier.popupShown=true">Обнулить</a></li>
+                </ul>
+            </div><!--/.nav-collapse -->
+        </div>
+    </nav>
+    <div class="container">
+        <div class="row">
+                <statistics></statistics>
+        </div>
+    </div>
+</main>
+
+<div class="popup" ng-show="cashier.popupShown">
+    <div class="parentDisable" ng-click="cashier.popupShown=false"></div>
+    <div class="well well-sm nulling">
+        <div class="page-header">
+            <h4>Вы точно хотите обнулить?</h4>
+            <button class="btn btn-danger" ng-click="cashier.clearAll(); cashier.popupShown=false">Да, точно</button>
+            <button class="btn btn-info" ng-click="cashier.popupShown=false">Нет, я передумал</button>
+        </div>
+    </div>
+</div>
+
+<div class="popup" ng-show="cashier.monthMoneyEdit">
+    <div class="parentDisable" ng-click="cashier.monthMoneyEdit=false"></div>
+    <div class="well well-sm nulling">
+        <div class="page-header">
+            <h4>Введите новое количество денег</h4>
+            <br>
+            <input type="text" class="form-control" ng-model="cashier.monthMoney">
+            <br>
+            <button style="width: 100%" class="btn btn-default" ng-click="cashier.refreshMonthMoney()">Обновить</button>
+        </div>
+    </div>
+</div>

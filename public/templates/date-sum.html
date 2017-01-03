@@ -1,0 +1,6 @@
+<ul class="list-group" style="margin-top: 30px" ng-show="cashier.getItems(cashier.date).length>0">
+    <li class="list-group-item" ng-repeat="item in cashier.getItems(cashier.date) track by $index">
+        {{item.name}}: {{ item.price }} <span class="badge">{{ item.category }}</span></li>
+    <li class="list-group-item list-group-item-warning">Общая сумма за день: {{ cashier.dayCount() }}
+    </li>
+</ul>
