@@ -143,17 +143,21 @@ function CashierController($http) {
     }
 
     this.addGain = function () {
-        var date = new Date();
+        if(this.addMoney !== null && this.addMoney != '') {
+            console.log(this.addMoney)
+            var date = new Date();
 
-        this.gains.push({
-            name: self.addName,
-            price: self.addMoney,
-            date: date
-        });
+            this.gains.push({
+                id: (this.gains.length)+1,
+                name: self.addName,
+                price: self.addMoney,
+                date: date
+            });
 
-        var tmp = JSON.stringify(this.gains);
-        localStorage.removeItem('gains');
-        localStorage.setItem('gains', tmp);
+            var tmp = JSON.stringify(this.gains);
+            localStorage.removeItem('gains');
+            localStorage.setItem('gains', tmp);
+        }
     }
 
     this.dayCount = function () {
@@ -184,9 +188,6 @@ function CashierController($http) {
         }
         return total;
     };
-    var i = this.totalPrice();
-
-    this.total = i;
 
     this.clearAll = function () {
         localStorage.clear();
@@ -270,23 +271,45 @@ function CashierController($http) {
     this.percents = p;
 
     this.addItem = function () {
+        if(this.price !== undefined && this.price != '') {
+            var date = new Date();
 
-        var date = new Date();
+            this.spendingItems.push({
+                id: (this.spendingItems.length)+1,
+                name: self.name,
+                price: self.price,
+                category: self.category,
+                date: date
+            });
+            this.isShowed = true;
 
-        this.spendingItems.push({
-            name: self.name,
-            price: self.price,
-            category: self.category,
-            date: date
-        });
-        this.isShowed = true;
+            this.totalPrice();
 
-        this.totalPrice();
+            var tmp = JSON.stringify(this.spendingItems);
 
-        var tmp = JSON.stringify(this.spendingItems);
+            localStorage.removeItem('spendingItems');
+            localStorage.setItem('spendingItems', tmp);
+        } else {
+            return;
+        }
+    };
 
-        localStorage.removeItem('spendingItems');
-        localStorage.setItem('spendingItems', tmp);
+    this.deleteItem = function (item, isGain) {
+        if (isGain===true) {
+            this.monthMoney -= parseInt(item.price);
+            localStorage.setItem('monthMoney', this.monthMoney);
+            this.gains = this.gains.filter(function(obj) {
+                return obj.id != item.id;
+            });
+            var tmp = JSON.stringify(this.gains);
+            localStorage.setItem('gains', tmp);
+        } else {
+            this.spendingItems = this.spendingItems.filter(function (obj) {
+                return obj.id != item.id;
+            });
+            var tmp = JSON.stringify(this.spendingItems);
+            localStorage.setItem('spendingItems', tmp);
+        }
     }
 
     this.labels = this.strDates.reverse();

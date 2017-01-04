@@ -64,19 +64,19 @@
     </div>
     <div class="panel-body" ng-show="cashier.isShowed">
         <ul class="list-group">
-            <spending-item ng-repeat="item in cashier.spendingItems track by $index"></spending-item>
+            <spending-item ng-repeat="item in cashier.spendingItems track by $index" ng-click="cashier.deleteItem(item)" ng-show="cashier.isBlured=true"></spending-item>
         </ul>
     </div>
 <div class="panel-body" ng-show="cashier.isShowedGains">
     <ul class="list-group">
-        <spending-item ng-repeat="item in cashier.gains track by $index"></spending-item>
+        <spending-item ng-repeat="item in cashier.gains track by $index" ng-click="cashier.deleteItem(item, true)"></spending-item>
     </ul>
 </div>
 </div>
 <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
     <div class="panel panel-default">
         <div class="panel-heading">
-            <h4>К {{ cashier.now.toLocaleDateString() }} потрачено {{ cashier.total }} рублей
+            <h4>К {{ cashier.now.toLocaleDateString() }} потрачено {{ cashier.totalPrice() }} рублей
                 <small class="pull-right hidden-xs hidden-sm">Сумма на месяц: {{ cashier.monthMoney }}</small>
             </h4>
         </div>
