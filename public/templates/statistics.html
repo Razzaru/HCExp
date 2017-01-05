@@ -28,10 +28,10 @@
             </select>
             <br>
             <button class="btn btn-default" style="width: 100%" ng-click="cashier.addItem(); count()">Добавить!</button>
-            <button class="btn btn-default" style="width: 49.1%; margin-top: 10px" ng-click="cashier.isShowed=true">
+            <button class="btn btn-default" style="width: 49.315%; margin-top: 10px" ng-click="cashier.isShowed=true">
                 Показать
             </button>
-            <button class="btn btn-default" style="width: 49.1%; margin-top: 10px" ng-click="cashier.isShowed=false">
+            <button class="btn btn-default" style="width: 49.315%; margin-top: 10px" ng-click="cashier.isShowed=false">
                 Спрятать
             </button>
         </div>
@@ -52,11 +52,11 @@
             <button class="btn btn-default" style="width: 100%" ng-click="cashier.addMonthMoney(); cashier.addGain(); cashier.isShowedGains=true">
                 Добавить!
             </button>
-            <button class="btn btn-default" style="width: 49.1%; margin-top: 10px"
+            <button class="btn btn-default" style="width: 49.315%; margin-top: 10px"
                     ng-click="cashier.isShowedGains=true">
                 Показать
             </button>
-            <button class="btn btn-default" style="width: 49.1%; margin-top: 10px"
+            <button class="btn btn-default" style="width: 49.315%; margin-top: 10px"
                     ng-click="cashier.isShowedGains=false">
                 Спрятать
             </button>
@@ -90,9 +90,9 @@
                 <p class="text-center">{{ cashier.monthMoney - cashier.totalPrice() }}</p>
             </div>
             <div class="page-header">
-                <button class="btn btn-default" style="width: 49%" ng-click="cashier.fullStatistics=true">Подробнее
+                <button class="btn btn-default" style="width: 49.7%" ng-click="cashier.fullStatistics=true">Подробнее
                 </button>
-                <button class="btn btn-default" style="width: 49%" ng-click="cashier.fullStatistics=false">Скрыть
+                <button class="btn btn-default" style="width: 49.7%" ng-click="cashier.fullStatistics=false">Скрыть
                 </button>
             </div>
             <ul class="list-group" ng-show="cashier.fullStatistics">
@@ -122,8 +122,8 @@
                 </ul>
 
                 <date-sum></date-sum>
-
+                                                    
             </div>
         </div>
     </div>
-</div>
+</div>      

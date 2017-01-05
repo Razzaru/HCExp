@@ -11,8 +11,7 @@ function MainApp() {
         controller: CashierController,
         controllerAs: 'cashier'
     };
-}
-;
+};
 
 app.directive('spendingItem', SpendingItem);
 
@@ -25,8 +24,7 @@ function SpendingItem() {
         controller: CashierController,
         controllerAs: 'cashier'
     };
-}
-;
+};
 
 app.directive('statistics', Statistics);
 
@@ -39,8 +37,7 @@ function Statistics() {
         controller: CashierController,
         controllerAs: 'cashier'
     };
-}
-;
+};
 
 
 app.directive('dateSum', DateSum);
@@ -54,8 +51,7 @@ function DateSum() {
         controller: CashierController,
         controllerAs: 'cashier'
     };
-}
-;
+};
 
 app.filter('reverse', function() {
     return function(items) {
@@ -71,13 +67,13 @@ function CashierController($http) {
     var self = this;
 
     this.categories = [
-        {name: "Еда"},
-        {name: "Проезды"}, 
-        {name: "Алкоголь"},
-        {name: "Электроника"},
-        {name: "Мебель"},
-        {name: "Посуда"},
-        {name: "Другое"}
+        { name: "Еда" },
+        { name: "Проезды" },
+        { name: "Алкоголь" },
+        { name: "Электроника" },
+        { name: "Мебель" },
+        { name: "Посуда" },
+        { name: "Другое" }
     ];
 
     this.isShowed = false;
@@ -90,7 +86,7 @@ function CashierController($http) {
 
     this.showFirst = true;
 
-    this.log = function () {
+    this.log = function() {
         console.log(this.date);
     }
 
@@ -125,30 +121,30 @@ function CashierController($http) {
         localStorage.removeItem('isReseted');
     }
 
-    this.getItems = function (date) {
+    this.getItems = function(date) {
         var items = [];
-        for(var i = 0; i<this.spendingItems.length;i++) {
-            if(new Date(Date.parse(this.spendingItems[i].date)).getDate() === date.getDate()) {
-                if(new Date(Date.parse(this.spendingItems[i].date)).getMonth() === date.getMonth()) {
+        for (var i = 0; i < this.spendingItems.length; i++) {
+            if (new Date(Date.parse(this.spendingItems[i].date)).getDate() === date.getDate()) {
+                if (new Date(Date.parse(this.spendingItems[i].date)).getMonth() === date.getMonth()) {
                     items.push(this.spendingItems[i]);
                 }
             }
         }
         return items;
     };
-    
-    this.addMonthMoney = function () {
+
+    this.addMonthMoney = function() {
         this.monthMoney += parseInt(this.addMoney);
         localStorage.setItem('monthMoney', this.monthMoney);
     }
 
-    this.addGain = function () {
-        if(this.addMoney !== null && this.addMoney != '') {
+    this.addGain = function() {
+        if (this.addMoney !== null && this.addMoney != '') {
             console.log(this.addMoney)
             var date = new Date();
 
             this.gains.push({
-                id: (this.gains.length)+1,
+                id: (this.gains.length) + 1,
                 name: self.addName,
                 price: self.addMoney,
                 date: date
@@ -160,17 +156,17 @@ function CashierController($http) {
         }
     }
 
-    this.dayCount = function () {
+    this.dayCount = function() {
         var count = 0;
-        for(var i = 0; i<this.getItems(this.date).length;i++) {
+        for (var i = 0; i < this.getItems(this.date).length; i++) {
             count += parseInt(this.getItems(this.date)[i].price);
         }
         return count;
     }
 
-    this.dayCountParam = function (date) {
+    this.dayCountParam = function(date) {
         var count = 0;
-        for(var i = 0; i<this.getItems(date).length;i++) {
+        for (var i = 0; i < this.getItems(date).length; i++) {
             count += parseInt(this.getItems(date)[i].price);
         }
         return count;
@@ -181,7 +177,7 @@ function CashierController($http) {
         this.filteredItems = this.getItems(date);
     }
 
-    this.totalPrice = function () {
+    this.totalPrice = function() {
         var total = 0;
         for (var i = 0; i < this.spendingItems.length; i++) {
             total += parseInt(this.spendingItems[i].price);
@@ -189,17 +185,17 @@ function CashierController($http) {
         return total;
     };
 
-    this.clearAll = function () {
+    this.clearAll = function() {
         localStorage.clear();
         window.location.reload(false);
     }
 
-    this.refreshMonthMoney = function () {
+    this.refreshMonthMoney = function() {
         localStorage.setItem('monthMoney', this.monthMoney);
         window.location.reload(false);
     }
 
-    this.countCat = function (cat) {
+    this.countCat = function(cat) {
         var total = 0;
         for (var i = 0; i < this.spendingItems.length; i++) {
             if (this.spendingItems[i].category == cat) {
@@ -209,9 +205,9 @@ function CashierController($http) {
         return total;
     };
 
-    this.lastSixDays = function () {
+    this.lastSixDays = function() {
         var dates = [];
-        for(var i = 0; i<=5; i++) {
+        for (var i = 0; i <= 5; i++) {
             var date = new Date();
             var dd = date.getDate();
             date.setDate(dd - i);
@@ -220,12 +216,12 @@ function CashierController($http) {
         return dates;
     };
 
-    this.setNewActiveDates = function (int) {
-        if(localStorage.getItem('offset') != null) {
+    this.setNewActiveDates = function(int) {
+        if (localStorage.getItem('offset') != null) {
             int += parseInt(localStorage.getItem('offset'))
         }
         var dates = [];
-        for(var i = int; i<=int+5; i++) {
+        for (var i = int; i <= int + 5; i++) {
             var date = new Date();
             var dd = date.getDate();
             date.setDate(dd - i);
@@ -247,35 +243,35 @@ function CashierController($http) {
 
 
     this.dates = this.lastSixDays();
-    
-    this.strDates = this.dates.map(function (item) {
+
+    this.strDates = this.dates.map(function(item) {
         return item.toLocaleDateString();
     })
-    
-    this.counts = function () {
+
+    this.counts = function() {
         var dates = this.dates.slice(0);
-        var data = dates.map(function (item) {
+        var data = dates.map(function(item) {
             return self.dayCountParam(item);
         })
         return data;
     }
 
-    this.percentage = function () {
+    this.percentage = function() {
         var percent = this.monthMoney / 100;
 
-        return this.totalPrice()/percent;
+        return this.totalPrice() / percent;
     }
 
     var p = this.percentage();
 
     this.percents = p;
 
-    this.addItem = function () {
-        if(this.price !== undefined && this.price != '') {
+    this.addItem = function() {
+        if (this.price !== undefined && this.price != '') {
             var date = new Date();
 
             this.spendingItems.push({
-                id: (this.spendingItems.length)+1,
+                id: (this.spendingItems.length) + 1,
                 name: self.name,
                 price: self.price,
                 category: self.category,
@@ -294,8 +290,8 @@ function CashierController($http) {
         }
     };
 
-    this.deleteItem = function (item, isGain) {
-        if (isGain===true) {
+    this.deleteItem = function(item, isGain) {
+        if (isGain === true) {
             this.monthMoney -= parseInt(item.price);
             localStorage.setItem('monthMoney', this.monthMoney);
             this.gains = this.gains.filter(function(obj) {
@@ -304,7 +300,7 @@ function CashierController($http) {
             var tmp = JSON.stringify(this.gains);
             localStorage.setItem('gains', tmp);
         } else {
-            this.spendingItems = this.spendingItems.filter(function (obj) {
+            this.spendingItems = this.spendingItems.filter(function(obj) {
                 return obj.id != item.id;
             });
             var tmp = JSON.stringify(this.spendingItems);
@@ -318,20 +314,18 @@ function CashierController($http) {
     this.datasetOverride = [{ yAxisID: 'y-axis-1' }];
     this.options = {
         scales: {
-            yAxes: [
-                {
-                    id: 'y-axis-1',
-                    type: 'linear',
-                    display: true,
-                    position: 'left'
-                }
-            ]
+            yAxes: [{
+                id: 'y-axis-1',
+                type: 'linear',
+                display: true,
+                position: 'left'
+            }]
         }
     };
 
-    this.getLastMonth = function () {
+    this.getLastMonth = function() {
         var arr = [];
-        for (var i = 1; i<=31; i++) {
+        for (var i = 1; i <= 31; i++) {
             var date = new Date();
             var dd = date.getDate();
             date.setDate(dd - i);

@@ -4,7 +4,7 @@ Home Cashier
 ## About ##
 
 
-You can see it working [here](https://polar-anchorage-58321.herokuapp.com/) as well.
+You can see it working [here](https://homecashier.herokuapp.com/) as well.
 You can use it for your home payments, or if you want to control every dollar(rouble khe-khe) you have.
 
 
