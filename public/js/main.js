@@ -1,4 +1,4 @@
-var app = angular.module('cashier', ['chart.js', 'ui.router']);
+var app = angular.module('cashier', ['chart.js', 'ui.router', 'ui-notification']);
 
 app.directive('mainApp', MainApp);
 
@@ -66,8 +66,20 @@ function Loading() {
     };
 };
 
-app.filter('reverse', function() {
-    return function(items) {
+app.directive('login', Login);
+
+function Login() {
+    return {
+        restrict: 'E',
+        templateUrl: '/templates/login.html',
+        priority: 1002,
+        controller: CashierController,
+        controllerAs: 'cashier'
+    };
+};
+
+app.filter('reverse', function () {
+    return function (items) {
         return items.slice().reverse();
     };
 });
@@ -75,10 +87,17 @@ app.filter('reverse', function() {
 
 app.controller('CashierController', CashierController);
 
-function CashierController($http) {
+function CashierController($http, CashierService, Notification) {
 
     var self = this;
-
+    this.isShowed = false;
+    this.now = new Date();
+    this.date = this.now;
+    this.showFirst = true;
+    this.filteredItems;
+    this.gains = CashierService.getGains();
+    this.spendingItems = CashierService.getSpendingItems();
+    this.monthMoney = CashierService.getMonthMoney();
     this.categories = [
         { name: "Еда" },
         { name: "Проезды" },
@@ -89,52 +108,9 @@ function CashierController($http) {
         { name: "Другое" }
     ];
 
-    this.isShowed = false;
+    CashierService.reset();
 
-    this.now = new Date();
-
-    this.date = this.now;
-
-    this.active = this.now;
-
-    this.showFirst = true;
-
-    this.log = function() {
-        console.log(this.date);
-    }
-
-    this.filteredItems;
-
-    if (localStorage.getItem('gains') != null) {
-        this.gains = JSON.parse(localStorage.getItem('gains'));
-    } else {
-        this.gains = [];
-    }
-
-    if (localStorage.getItem('spendingItems') != null) {
-        this.spendingItems = JSON.parse(localStorage.getItem('spendingItems'));
-    } else {
-        this.spendingItems = [];
-    }
-
-    if (localStorage.getItem('monthMoney') != null) {
-        this.monthMoney = parseInt(localStorage.getItem('monthMoney'));
-    } else {
-        this.monthMoney = 0;
-    }
-
-    if (this.now.getDate() === 1) {
-        if (localStorage.getItem('isReseted') == null) {
-            localStorage.clear();
-            localStorage.setItem('isReseted', 'true');
-        }
-    }
-
-    if (this.now.getDate() === 2) {
-        localStorage.removeItem('isReseted');
-    }
-
-    this.getItems = function(date) {
+    this.getItems = function (date) {
         var items = [];
         for (var i = 0; i < this.spendingItems.length; i++) {
             if (new Date(Date.parse(this.spendingItems[i].date)).getDate() === date.getDate()) {
@@ -146,12 +122,12 @@ function CashierController($http) {
         return items;
     };
 
-    this.addMonthMoney = function() {
+    this.addMonthMoney = function () {
         this.monthMoney += parseInt(this.addMoney);
         localStorage.setItem('monthMoney', this.monthMoney);
-    }
+    };
 
-    this.addGain = function() {
+    this.addGain = function () {
         if (this.addMoney !== null && this.addMoney != '') {
             console.log(this.addMoney)
             var date = new Date();
@@ -167,17 +143,17 @@ function CashierController($http) {
             localStorage.removeItem('gains');
             localStorage.setItem('gains', tmp);
         }
-    }
+    };
 
-    this.dayCount = function() {
+    this.dayCount = function () {
         var count = 0;
         for (var i = 0; i < this.getItems(this.date).length; i++) {
             count += parseInt(this.getItems(this.date)[i].price);
         }
         return count;
-    }
+    };
 
-    this.dayCountParam = function(date) {
+    this.dayCountParam = function (date) {
         var count = 0;
         for (var i = 0; i < this.getItems(date).length; i++) {
             count += parseInt(this.getItems(date)[i].price);
@@ -185,12 +161,12 @@ function CashierController($http) {
         return count;
     }
 
-    this.setActive = function(date) {
+    this.setActive = function (date) {
         this.active = date;
         this.filteredItems = this.getItems(date);
     }
 
-    this.totalPrice = function() {
+    this.totalPrice = function () {
         var total = 0;
         for (var i = 0; i < this.spendingItems.length; i++) {
             total += parseInt(this.spendingItems[i].price);
@@ -198,17 +174,17 @@ function CashierController($http) {
         return total;
     };
 
-    this.clearAll = function() {
+    this.clearAll = function () {
         localStorage.clear();
         window.location.reload(false);
-    }
+    };
 
-    this.refreshMonthMoney = function() {
+    this.refreshMonthMoney = function () {
         localStorage.setItem('monthMoney', this.monthMoney);
         window.location.reload(false);
-    }
+    };
 
-    this.countCat = function(cat) {
+    this.countCat = function (cat) {
         var total = 0;
         for (var i = 0; i < this.spendingItems.length; i++) {
             if (this.spendingItems[i].category == cat) {
@@ -218,7 +194,7 @@ function CashierController($http) {
         return total;
     };
 
-    this.lastSixDays = function() {
+    this.lastSixDays = function () {
         var dates = [];
         for (var i = 0; i <= 5; i++) {
             var date = new Date();
@@ -229,7 +205,7 @@ function CashierController($http) {
         return dates;
     };
 
-    this.setNewActiveDates = function(int) {
+    this.setNewActiveDates = function (int) {
         if (localStorage.getItem('offset') != null) {
             int += parseInt(localStorage.getItem('offset'))
         }
@@ -249,27 +225,21 @@ function CashierController($http) {
         this.dates = dates;
     };
 
-    window.onunload = function() {
-        localStorage.removeItem('offset');
-        return '';
-    };
-
-
     this.dates = this.lastSixDays();
 
-    this.strDates = this.dates.map(function(item) {
+    this.strDates = this.dates.map(function (item) {
         return item.toLocaleDateString();
     })
 
-    this.counts = function() {
+    this.counts = function () {
         var dates = this.dates.slice(0);
-        var data = dates.map(function(item) {
+        var data = dates.map(function (item) {
             return self.dayCountParam(item);
         })
         return data;
     }
 
-    this.percentage = function() {
+    this.percentage = function () {
         var percent = this.monthMoney / 100;
 
         return this.totalPrice() / percent;
@@ -279,7 +249,7 @@ function CashierController($http) {
 
     this.percents = p;
 
-    this.addItem = function() {
+    this.addItem = function () {
         if (this.price !== undefined && this.price != '') {
             var date = new Date();
 
@@ -303,17 +273,17 @@ function CashierController($http) {
         }
     };
 
-    this.deleteItem = function(item, isGain) {
+    this.deleteItem = function (item, isGain) {
         if (isGain === true) {
             this.monthMoney -= parseInt(item.price);
             localStorage.setItem('monthMoney', this.monthMoney);
-            this.gains = this.gains.filter(function(obj) {
+            this.gains = this.gains.filter(function (obj) {
                 return obj.id != item.id;
             });
             var tmp = JSON.stringify(this.gains);
             localStorage.setItem('gains', tmp);
         } else {
-            this.spendingItems = this.spendingItems.filter(function(obj) {
+            this.spendingItems = this.spendingItems.filter(function (obj) {
                 return obj.id != item.id;
             });
             var tmp = JSON.stringify(this.spendingItems);
@@ -336,7 +306,7 @@ function CashierController($http) {
         }
     };
 
-    this.getLastMonth = function() {
+    this.getLastMonth = function () {
         var arr = [];
         for (var i = 1; i <= 31; i++) {
             var date = new Date();
@@ -345,5 +315,65 @@ function CashierController($http) {
             arr.push(date.toLocaleDateString());
         }
         return arr;
+    };
+
+    this.checkAuth = function() {
+        if(this.username != 'razzaru' && this.password !== 'D234znL50C') {
+            Notification.error({message: 'Неверный пользователь или пароль', delay: 2000});
+        } else {
+            CashierService.checkAuth = true;
+        }    
+    }
+
+    this.getError = function() {
+        return CashierService.flashError;
+    }
+
+    window.onunload = function () {
+        localStorage.removeItem('offset');
+        return '';
+    };
+}
+
+app.service('CashierService', CashierService);
+
+function CashierService() {
+
+    this.getGains = function () {
+        if (localStorage.getItem('gains') != null) {
+            return JSON.parse(localStorage.getItem('gains'));
+        } else {
+            return [];
+        }
+    }
+
+    this.getSpendingItems = function () {
+        if (localStorage.getItem('spendingItems') != null) {
+            return JSON.parse(localStorage.getItem('spendingItems'));
+        } else {
+            return [];
+        }
+    }
+
+    this.getMonthMoney = function () {
+        if (localStorage.getItem('monthMoney') != null) {
+            return parseInt(localStorage.getItem('monthMoney'));
+        } else {
+            return 0;
+        }
+    }
+
+    this.reset = function () {
+        var now = new Date();
+        if (now.getDate() === 1) {
+            if (localStorage.getItem('isReseted') == null) {
+                localStorage.clear();
+                localStorage.setItem('isReseted', 'true');
+            }
+        }
+
+        if (now.getDate() === 2) {
+            localStorage.removeItem('isReseted');
+        }
     }
 }

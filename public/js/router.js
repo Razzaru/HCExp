@@ -6,13 +6,19 @@ app.config(function ($stateProvider, $urlRouterProvider) {
             url: '',
             template: '<main-app></main-app>',
             resolve: {
-                cashier: function ($q, $timeout) {
-                    return $q.when($timeout(function () {
+                cashier: function ($state, CashierService) {
+                    if(CashierService.checkAuth) {
                         return true;
-                    }, 1000))
+                    } else {
+                        $state.go('/login');
+                    }
                 }
             }
-        });
+        })
+        .state('login', {
+            url: '/login',
+            template: '<login></login>'
+        })
 
-    $urlRouterProvider.otherwise('');
+    $urlRouterProvider.when('', '/login');
 });
