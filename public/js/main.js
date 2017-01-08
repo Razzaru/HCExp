@@ -1,4 +1,4 @@
-var app = angular.module('cashier', ['chart.js']);
+var app = angular.module('cashier', ['chart.js', 'ui.router']);
 
 app.directive('mainApp', MainApp);
 
@@ -33,7 +33,7 @@ function Statistics() {
         restrict: 'E',
         templateUrl: '/templates/statistics.html',
         priority: 1001,
-        scope: true,
+        scope: false,
         controller: CashierController,
         controllerAs: 'cashier'
     };
@@ -46,6 +46,19 @@ function DateSum() {
     return {
         restrict: 'E',
         templateUrl: '/templates/date-sum.html',
+        priority: 1002,
+        scope: false,
+        controller: CashierController,
+        controllerAs: 'cashier'
+    };
+};
+
+app.directive('loading', Loading);
+
+function Loading() {
+    return {
+        restrict: 'E',
+        templateUrl: '/templates/loading.html',
         priority: 1002,
         scope: false,
         controller: CashierController,

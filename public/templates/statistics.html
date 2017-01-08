@@ -28,10 +28,10 @@
             </select>
             <br>
             <button class="btn btn-default" style="width: 100%" ng-click="cashier.addItem(); count()">Добавить!</button>
-            <button class="btn btn-default" style="width: 49.315%; margin-top: 10px" ng-click="cashier.isShowed=true">
+            <button class="btn btn-default" style="width: 49.2%; margin-top: 10px" ng-click="cashier.isShowed=true">
                 Показать
             </button>
-            <button class="btn btn-default" style="width: 49.315%; margin-top: 10px" ng-click="cashier.isShowed=false">
+            <button class="btn btn-default" style="width: 49.2%; margin-top: 10px" ng-click="cashier.isShowed=false">
                 Спрятать
             </button>
         </div>
@@ -95,6 +95,7 @@
                 <button class="btn btn-default" style="width: 49.7%" ng-click="cashier.fullStatistics=false">Скрыть
                 </button>
             </div>
+            <test></test>
             <ul class="list-group" ng-show="cashier.fullStatistics">
                 <li class="list-group-item">Еда: {{ cashier.countCat('Еда') }}</li>
                 <li class="list-group-item">Проезды: {{ cashier.countCat('Проезды') }}</li>
@@ -104,9 +105,9 @@
                 <li class="list-group-item">Посуда: {{ cashier.countCat('Посуда') }}</li>
                 <li class="list-group-item">Другое: {{ cashier.countCat('Другое') }}</li>
             </ul>
+            <hr ng-show="cashier.fullStatistics">
             <canvas id="line" class="chart chart-line" chart-data="cashier.data"
-                    chart-labels="cashier.labels" chart-series="cashier.series" chart-options="cashier.options"
-                    chart-dataset-override="cashier.datasetOverride">
+                    chart-labels="cashier.labels" chart-series="cashier.series" chart-options="cashier.options">
             </canvas>
             <hr>
             <div class="days hidden-xs hidden-sm">
