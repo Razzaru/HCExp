@@ -321,6 +321,7 @@ function CashierController($http, CashierService, Notification) {
         if(this.username != 'razzaru' && this.password !== 'D234znL50C') {
             Notification.error({message: 'Неверный пользователь или пароль', delay: 2000});
         } else {
+            sessionStorage.setItem('auth', 'on');
             CashierService.checkAuth = true;
         }    
     }
@@ -338,6 +339,8 @@ function CashierController($http, CashierService, Notification) {
 app.service('CashierService', CashierService);
 
 function CashierService() {
+
+    this.checkAuth = sessionStorage.getItem('auth') == 'on' ? true : false;
 
     this.getGains = function () {
         if (localStorage.getItem('gains') != null) {
