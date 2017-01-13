@@ -142,6 +142,7 @@ function CashierController($http, CashierService, Notification) {
             var tmp = JSON.stringify(this.gains);
             localStorage.removeItem('gains');
             localStorage.setItem('gains', tmp);
+            Notification.success({message: 'Запись успешно добавлена', delay: 1500});
         }
     };
 
@@ -268,6 +269,7 @@ function CashierController($http, CashierService, Notification) {
 
             localStorage.removeItem('spendingItems');
             localStorage.setItem('spendingItems', tmp);
+            Notification.success({message: 'Запись успешно добавлена', delay: 1500});
         } else {
             return;
         }
@@ -289,6 +291,7 @@ function CashierController($http, CashierService, Notification) {
             var tmp = JSON.stringify(this.spendingItems);
             localStorage.setItem('spendingItems', tmp);
         }
+        Notification.warning({message: 'Запись успешно удалена', delay: 1500});
     }
 
     this.labels = this.strDates.reverse();
@@ -340,7 +343,7 @@ app.service('CashierService', CashierService);
 
 function CashierService() {
 
-    this.checkAuth = sessionStorage.getItem('auth') == 'on' ? true : false;
+    //this.checkAuth = sessionStorage.getItem('auth') == 'on' ? true : false;
 
     this.getGains = function () {
         if (localStorage.getItem('gains') != null) {
