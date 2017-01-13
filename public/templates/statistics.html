@@ -106,7 +106,7 @@
                 <li class="list-group-item">Другое: {{ cashier.countCat('Другое') }}</li>
             </ul>
             <hr ng-show="cashier.fullStatistics">
-            <canvas id="line" class="chart chart-line" chart-data="cashier.data"
+            <canvas id="line" class="chart chart-line" chart-data="[cashier.counts().reverse()]"
                     chart-labels="cashier.labels" chart-series="cashier.series" chart-options="cashier.options">
             </canvas>
             <hr>

@@ -142,7 +142,7 @@ function CashierController($http, CashierService, Notification) {
             var tmp = JSON.stringify(this.gains);
             localStorage.removeItem('gains');
             localStorage.setItem('gains', tmp);
-            Notification.success({message: 'Запись успешно добавлена', delay: 1500});
+            Notification.success({ message: 'Запись успешно добавлена', delay: 1500 });
         }
     };
 
@@ -269,7 +269,7 @@ function CashierController($http, CashierService, Notification) {
 
             localStorage.removeItem('spendingItems');
             localStorage.setItem('spendingItems', tmp);
-            Notification.success({message: 'Запись успешно добавлена', delay: 1500});
+            Notification.success({ message: 'Запись успешно добавлена', delay: 1500 });
         } else {
             return;
         }
@@ -291,7 +291,7 @@ function CashierController($http, CashierService, Notification) {
             var tmp = JSON.stringify(this.spendingItems);
             localStorage.setItem('spendingItems', tmp);
         }
-        Notification.warning({message: 'Запись успешно удалена', delay: 1500});
+        Notification.warning({ message: 'Запись успешно удалена', delay: 1500 });
     }
 
     this.labels = this.strDates.reverse();
@@ -320,16 +320,16 @@ function CashierController($http, CashierService, Notification) {
         return arr;
     };
 
-    this.checkAuth = function() {
-        if(this.username != 'razzaru' && this.password !== 'D234znL50C') {
-            Notification.error({message: 'Неверный пользователь или пароль', delay: 2000});
+    this.checkAuth = function () {
+        if (this.username != 'razzaru' && this.password !== 'D234znL50C') {
+            Notification.error({ message: 'Неверный пользователь или пароль', delay: 2000 });
         } else {
             sessionStorage.setItem('auth', 'on');
             CashierService.checkAuth = true;
-        }    
+        }
     }
 
-    this.getError = function() {
+    this.getError = function () {
         return CashierService.flashError;
     }
 
